@@ -20,5 +20,8 @@ node_modules/
 .settings/
 .vscode/
 
+### Webstorm ###
+.idea/
+
 ### Other ###
 .test/

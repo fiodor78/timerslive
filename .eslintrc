@@ -1,0 +1,25 @@
+{
+    "parser": "babel-eslint",
+    "rules": {
+        "max-len": [1, 130, 2, {
+            "ignoreComments": true
+        }],
+        "react/destructuring-assignment": ["enabled","always"],
+        "no-console": 0,
+        "constructor-super" : 2,
+        "react/prop-types": ["skipUndeclared"]
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}
