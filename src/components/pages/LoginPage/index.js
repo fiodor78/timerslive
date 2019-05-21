@@ -1,116 +1,18 @@
-import React from 'react';
-import { install } from '@material-ui/styles';
-import { Avatar, Button, Link, Grid, Box, TextField, Checkbox, Typography } from '@material-ui/core';
-import { Container, FormControlLabel, CssBaseline } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { Component } from 'react';
+import LoginForm from './LoginForm';
+import LoginNotificationOffer from './LoginNotificationOffer';
+import "./styles.scss";
 
-install();
-
-
-function MadeByTimersLive() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Built with happiness by the '}
-            <Link color="inherit" href="https://timers.live/">TIMERS.LIVE</Link>
-            {' team.'}
-        </Typography>
-    );
-}
-
-export default function LoginPage() {
-
-    const classes = useStyles();
-
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign in
-                    </Typography>
-                <form className={classes.form} noValidate>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Sign In
-                    </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
+class LoginPage extends Component {
+    state = {  }
+    render() {
+        return (
+            <div className="login-page_wrapper">
+                <LoginForm/>
+                <LoginNotificationOffer/>
             </div>
-            <Box mt={5}>
-                <MadeByTimersLive />
-            </Box>
-        </Container>
-    );
-
+        );
+    }
 }
 
-const useStyles = makeStyles(theme => ({
-    '@global': {
-        body: {
-            backgroundColor: theme.palette.common.white
-        },
-    },
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
-}));
+export default LoginPage;
