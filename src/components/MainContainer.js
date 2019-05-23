@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {Router, Switch, Route} from 'react-router-dom';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-//import WelcomePage from './pages/WelcomePage';
 import HomePage from './pages/HomePage'
-
 import { PrivateRouter } from './router/PrivateRouter';
+import { history } from '../helpers/History';
 
-//import purple from '@material-ui/core/colors/purple';
+import orange from '@material-ui/core/colors/orange';
 import amber from '@material-ui/core/colors/amber';
 
-// import red from '@material-ui/core/colors/red';
-// import {grey, black} from '@material-ui/core/colors'
 
 const theme = createMuiTheme({
     palette: {
@@ -23,6 +20,7 @@ const theme = createMuiTheme({
         //     default: black
         // },
         primary: { main: amber[500] },
+        error: {main: orange[500] }
         // secondary: grey,
         // error: red,
         // // Used by `getContrastText()` to maximize the contrast between the background and
@@ -36,11 +34,13 @@ const theme = createMuiTheme({
 });
 
 class MainContainer extends Component {
+
+
     state = {}
     render() {
         return (
             <MuiThemeProvider theme={theme}>
-                <BrowserRouter>
+                <Router history={history}>
                     <Switch>
                         <PrivateRouter exact path="/" component={HomePage} />
                         <Route path="/login" component={LoginPage}/>
@@ -48,7 +48,7 @@ class MainContainer extends Component {
                         {//<Route path="*" component={WelcomePage}/>
                         }
                     </Switch>
-                </BrowserRouter>
+                </Router>
 
             </MuiThemeProvider>
         );

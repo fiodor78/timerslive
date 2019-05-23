@@ -8,19 +8,31 @@ export function authentication(state = initialState, action) {
         case userConstants.LOGIN_REQUEST:
             return {
                 loggingIn: true,
-                user: action.user
+                user: action.user.username,
+                password: action.user.password,
+                errors: {}
             };
         case userConstants.LOGIN_SUCCESS:
+            console.log("SUCCESS", action);
             return {
-                loggedIn: true,
-                user: action.user
+                loggingIn: true,
+                user: action.user.username,
+                password: action.user.password,
+                authorization_code: action.user.authorization_code,
+                expires_at: action.user.expires_at
+
             };
         case userConstants.LOGIN_FAILURE:
             return {
-                loggedIn: false
+                loggingIn: false,
+                password: '',
+                errors : action.error
             };
         case userConstants.LOGOUT:
-            return {};
+            return {
+                password: '',
+                loggingIn: false
+            };
         default:
             return state
     }

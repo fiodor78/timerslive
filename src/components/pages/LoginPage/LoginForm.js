@@ -1,19 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Avatar, Button, Link, Grid, Box, TextField, Checkbox, Typography } from '@material-ui/core';
-import { Container, FormControlLabel, CssBaseline } from '@material-ui/core';
+import { Button, Link, TextField, Checkbox, Typography } from '@material-ui/core';
+import { FormControlLabel, CssBaseline } from '@material-ui/core';
 import { userActions } from '../../../actions/UserActions';
-import Alarm from '@material-ui/icons/Alarm';
-
-function MadeByTimersLive() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Built with happiness by the '}
-            <Link color="inherit" href="https://timers.live/">TIMERS.LIVE</Link>
-            {' team.'}
-        </Typography>
-    );
-}
+import LogoImage from '../../../images/timers-logotype-new.png';
+import LockIcon from '@material-ui/icons/lock';
+import orange from '@material-ui/core/colors/orange';
 
 class LoginForm extends Component {
 
@@ -25,7 +17,9 @@ class LoginForm extends Component {
 
         this.state = {
             email: '',
+            emailError: false,
             password: '',
+            passwordError: false,
             submitted: false
         };
 
@@ -33,10 +27,38 @@ class LoginForm extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+
+        const { loggingIn, errors, password } = nextProps.authentication;
+        let emailError = '';
+        let passwordError = '';
+
+        if (errors) {
+            emailError = errors.username || '';
+            passwordError = errors.password || '';
+        }
+
+        console.log("PASSWORD: ", password, "isLogged", loggingIn);
+
+        this.setState({ submitted: loggingIn, password: password, emailError, passwordError });
+    }
+
     handleChange(e) {
+
         const { name, value } = e.target;
-        console.log( name, value);
-        this.setState({ [name]: value });
+        let { emailError, passwordError } = this.state;
+
+        switch (name) {
+            case 'email':
+                emailError = '';
+                break;
+            case 'password':
+                passwordError = '';
+                break;
+        }
+
+        this.setState({ emailError, passwordError, [name]: value });
+
     }
 
     handleSubmit(e) {
@@ -45,34 +67,32 @@ class LoginForm extends Component {
         this.setState({ submitted: true });
         const { email, password } = this.state;
         const { dispatch } = this.props;
-
-        if (email && password) {
-            dispatch(userActions.login(email, password));
-        }
+        dispatch(userActions.login(email, password));
     }
 
     componentDidMount() {
-        console.log('CDM');
+        //console.log('CDM');
     }
 
     render() {
 
-        const {email, submitted} = this.state;
-        const {alert} = this.props;
-
-        console.log("Rendering");
-
+        const { email, password, submitted, emailError, passwordError } = this.state;
         return (
-            <Container component="main" maxWidth="xs">
+            <div className="login-form">
                 <CssBaseline />
-                <div className="login-form">
-                    <Avatar className="avatar">
-                        <Alarm />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign in to Timers
-                    </Typography>
-                    <form noValidate onSubmit={this.handleSubmit}>
+                <div className="content">
+
+                    <header>
+                        <Link href="/">
+                            <img src={LogoImage} />
+                        </Link>
+                        <div className="login-button">Don&apos;t have an account?&nbsp;
+                        <Link href="/signup" className="login-button">Sign up</Link>
+                        </div>
+                    </header>
+
+                    <form noValidate className="container" onSubmit={this.handleSubmit}>
+                    <div className="h1 container"><Typography component="h2" variant="h5">Log in</Typography></div>
                         <TextField
                             variant="outlined"
                             margin="normal"
@@ -83,9 +103,16 @@ class LoginForm extends Component {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            value = {email}
+                            value={email}
+                            error={emailError.length > 0}
                             onChange={this.handleChange}
+                            disabled={submitted}
                         />
+                        {
+                            emailError.length > 0 &&
+                            <Typography component="p" variant="overline" className="error-text" style={{ color: orange[500] }}>
+                                {emailError}</Typography>
+                        }
                         <TextField
                             variant="outlined"
                             margin="normal"
@@ -95,80 +122,59 @@ class LoginForm extends Component {
                             label="Password"
                             type="password"
                             id="password"
+                            value={password}
+                            error={passwordError.length > 0}
                             autoComplete="current-password"
                             onChange={this.handleChange}
+                            disabled={submitted}
                         />
                         {
-                            alert.message && 
-                            <Typography component="h1" variant="h4">{alert.message}</Typography>
+                            passwordError.length > 0 &&
+                            <Typography component="p" variant="overline" className="error-text" style={{ color: orange[500] }}>
+                                {passwordError}</Typography>
                         }
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        />
+                        <div className="extra-actions">
+                            <FormControlLabel
+                                control={<Checkbox value="remember" checked color="primary" />}
+                                label="Remember me" />
+                            <Link href="#" variant="body2" style={{color: "white"}}>Forgot password?</Link>
+                        </div>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             color="primary"
-                            className="submit"
+                            size="large"
+                            className="button"
                             disabled={submitted}
-                        >
-                            Sign In
-                    </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                            </Link>
-                            </Grid>
-                            <Grid item>
-                                <Link href="/signup" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
+                        >{submitted ? "Signing In..." : "Sign In" }
+                        </Button>
+                        <Button
+                            fullWidth
+                            variant="outlined"
+                            color="primary"
+                            size="large"
+                            className="button">
+                            Continue with Google
+                            </Button>
                     </form>
+                    <footer className="container">
+                        <Typography component="p" variant="caption" color="textSecondary">
+                            <LockIcon fontSize="inherit" /> Your data is safe with us
+                        </Typography>
+                    </footer>
                 </div>
-                <Box mt={5}>
-                    <MadeByTimersLive />
-                </Box>
-            </Container>
+            </div>
         );
     }
 
 }
 
-/* const useStyles = makeStyles(theme => ({
-    
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        //backgroundColor: theme.palette.common.white,
-        padding: '24px',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        //backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
-})); */
-
 function mapStateToProps(state) {
-    const { authentication, alert } = state;
+    const { authentication } = state;
     return {
-        authentication,
-        alert
+        authentication
     };
 }
 
 export default connect(mapStateToProps)(LoginForm);
-//export default { connectedLoginPage  };

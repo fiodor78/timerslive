@@ -2,7 +2,7 @@
 import { authHeader } from '../helpers/AuthHeader';
 
 const config = {
-    apiUrl: "http://api.timers.live/1"
+    apiUrl: "http://api.timers.live"
 }
 
 export const userService = {
@@ -20,14 +20,13 @@ function login(username, password) {
         crossDomain: true,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        //body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password })
     };
 
-    console.log(requestOptions, username, password);
-
-    return fetch(`${config.apiUrl}/authorize`, requestOptions)//   /users/authenticate`, requestOptions)
+    return fetch(`${config.apiUrl}/authorize`, requestOptions)
         .then(handleResponse)
         .then(user => {
+            console.log("Store to LS", user)
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(user));
 
@@ -58,14 +57,17 @@ function getById(id) {
     return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
 }
 
-function register(user) {
+function register(username, password) {
+
+    const email = username;
     const requestOptions = {
+        crossDomain: true,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
+        body: JSON.stringify({username, password, email})
     };
 
-    return fetch(`${config.apiUrl}/users/register`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/register`, requestOptions).then(handleResponse);
 }
 
 function update(user) {
@@ -90,9 +92,9 @@ function _delete(id) {
 
 function handleResponse(response) {
     return response.text().then(text => {
-        const data = text && JSON.parse(text);
-
-        console.log("Response", text);
+        let data = text && JSON.parse(text);
+        
+        console.log("Response", data);
 
         if (!response.ok) {
             if (response.status === 401) {
@@ -101,8 +103,16 @@ function handleResponse(response) {
                 location.reload(true);
             }
 
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
+            if (response.status === 500) {
+                // temporary fix for "User already registered"
+                //logout();
+                //location.reload(true);
+                data = {errors: {email: ["Email is already in use"]}};
+            }
+
+            let {errors} = data
+            console.error("API ERRORS: ",errors);
+            return Promise.reject(errors);
         }
 
         return data;

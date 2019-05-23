@@ -1,5 +1,5 @@
 import { userConstants } from '../constants/Constants'
-import { alertActions } from './AlertActions';
+//import { alertActions } from './AlertActions';
 import { userService } from '../services/UserService';
 import { history } from '../helpers/History';
 
@@ -13,20 +13,22 @@ export const userActions = {
 
 function login(username, password) {
 
-    console.log("Loggin in ", username, password);
-
     return dispatch => {
-        dispatch(request({ username }));
+
+        // dispatch(alertActions.clear());
+        dispatch(request({ username, password }));
 
         userService.login(username, password)
             .then(
                 user => {
-                    dispatch(success(user));
+                    const { authorization_code, expires_at } = user.data;
+                    const userdata = { authorization_code, expires_at, username, password };
+                    dispatch(success(userdata));
                     history.push('/');
                 },
                 error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error(error.toString()));
+                    dispatch(failure(error));
+                    //dispatch(alertActions.error(error));
                 }
             );
     };
@@ -41,28 +43,29 @@ function logout() {
     return { type: userConstants.LOGOUT };
 }
 
-function register(user) {
+function register(username, password) {
     return dispatch => {
-        dispatch(request(user));
+        dispatch(request(username, password));
 
-        userService.register(user)
+        userService.register(username, password)
             .then(
-                //user => {
-                () => {
-                    dispatch(success());
-                    history.push('/login');
-                    dispatch(alertActions.success('Registration successful'));
+                user => {
+                    console.log("Registered", user);
+                    //dispatch(success());
+                    dispatch(login(username, password));
+                    //history.push('/login');
+                    //dispatch(alertActions.success('Registration successful'));
                 },
-                error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error(error.toString()));
+                errors => {
+                    dispatch(failure(errors));
+                    //dispatch(alertActions.error(error.toString()));
                 }
             );
     };
 
-    function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
-    function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
-    function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
+    function request(username, password) { return { type: userConstants.REGISTER_REQUEST, username, password } }
+    //function success(username) { return { type: userConstants.REGISTER_SUCCESS, username } }
+    function failure(errors) { return { type: userConstants.REGISTER_FAILURE, errors } }
 }
 
 function getAll() {

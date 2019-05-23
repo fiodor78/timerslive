@@ -1,14 +1,75 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link, Container, CssBaseline, Typography, TextField } from '@material-ui/core';
 import { FormControlLabel, Checkbox, Button } from '@material-ui/core';
-
+import { userActions } from '../../../actions/UserActions';
 import './styles.scss';
 import LogoImage from '../../../images/timers-logotype-new.png';
 import LockIcon from '@material-ui/icons/lock';
+import orange from '@material-ui/core/colors/orange';
 
 class SignupPage extends Component {
-    state = {}
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            email: '',
+            emailError: false,
+            password: '',
+            passwordError: false,
+            submitted: false
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+    }
+
+    handleChange(e) {
+        const { name, value } = e.target;
+        let { emailError, passwordError } = this.state;
+
+        switch (name) {
+            case 'email':
+                emailError = '';
+                break;
+            case 'password':
+                passwordError = '';
+                break;
+        }
+
+        this.setState({ emailError, passwordError, [name]: value });
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        const { errors, registering } = nextProps.registration;
+    
+        let emailError = '';
+        let passwordError = '';
+
+        if (errors) {
+            emailError = errors.email || '';
+            passwordError = errors.password || '';
+        }
+
+        this.setState({ submitted: registering, emailError, passwordError });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+        this.setState({ submitted: true });
+        const { email, password } = this.state;
+        const { dispatch } = this.props;
+        dispatch(userActions.register(email, password));
+    }
+
     render() {
+
+        const { email, password, submitted, emailError, passwordError } = this.state
+
         return (
             <Container component="main">
                 <CssBaseline />
@@ -32,7 +93,7 @@ class SignupPage extends Component {
                                 No credit card required  • Unsubscribe at any time</Typography>
                         </div>
 
-                        <form>
+                        <form onSubmit={this.handleSubmit}>
                             <TextField
                                 variant="outlined"
                                 margin="none"
@@ -44,7 +105,17 @@ class SignupPage extends Component {
                                 autoComplete="email"
                                 autoFocus
                                 className="form-elements"
+                                value={email}
+                                error={emailError.length > 0}
+                                onChange={this.handleChange}
+                                disabled={submitted}
                             />
+                            {
+                                emailError.length > 0 &&
+                                <Typography component="p" variant="overline"
+                                    className="error-text" style={{ color: orange[500] }}>
+                                    {emailError}</Typography>
+                            }
                             <TextField
                                 variant="outlined"
                                 margin="none"
@@ -54,25 +125,32 @@ class SignupPage extends Component {
                                 label="Password"
                                 type="password"
                                 id="password"
-                                autoComplete="current-password"
                                 className="form-elements"
+                                value={password}
+                                error={passwordError.length > 0}
+                                onChange={this.handleChange}
+                                disabled={submitted}
                             />
+                            {
+                                passwordError.length > 0 &&
+                                <Typography component="p" variant="overline"
+                                    className="error-text" style={{ color: orange[500] }}>
+                                    {passwordError}</Typography>
+                            }
                             <Button
                                 type="submit"
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                //size="large"
-                                className="form-elements">
-                                CREATE FREE ACCOUNT
-                            </Button>
+                                disabled={submitted}
+                                className="form-elements">CREATE FREE ACCOUNT</Button>
                             <Typography component="p" variant="body1">or</Typography>
                             <Button
                                 type="submit"
                                 fullWidth
                                 variant="outlined"
                                 color="primary"
-                                //size="large"
+                                disabled={submitted}
                                 className="form-elements">
                                 Continue with Google
                             </Button>
@@ -97,4 +175,12 @@ class SignupPage extends Component {
     }
 }
 
-export default SignupPage;
+function mapStateToProps(state) {
+    const { registration } = state;
+    return {
+        registration
+    };
+}
+
+export default connect(mapStateToProps)(SignupPage);
+//export default SignupPage
