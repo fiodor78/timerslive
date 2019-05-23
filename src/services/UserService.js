@@ -2,7 +2,7 @@
 import { authHeader } from '../helpers/AuthHeader';
 
 const config = {
-    apiUrl: "http://api.timers.live"
+    apiUrl: "https://api.timers.live"
 }
 
 export const userService = {
