@@ -65,7 +65,6 @@ class LoginForm extends Component {
         return (
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
-                {alert.message && <h4>{alert.message}</h4>}
                 <div className="login-form">
                     <Avatar className="avatar">
                         <Alarm />
@@ -99,6 +98,10 @@ class LoginForm extends Component {
                             autoComplete="current-password"
                             onChange={this.handleChange}
                         />
+                        {
+                            alert.message && 
+                            <Typography component="h1" variant="h4">{alert.message}</Typography>
+                        }
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
