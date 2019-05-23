@@ -23,11 +23,13 @@ class SignupPage extends Component {
                     </header>
                     <main className="container">
                         <div>
-                            <Typography component="h1" variant="h5" className="description welcomeText">Get started with Timers</Typography>
+                            <Typography component="h1" variant="h5" className="description welcomeText">
+                                Get started with Timers</Typography>
                             <Typography component="p" variant="body2" className="description">
                                 Create a free account to start tracking your worktime and increase your productivity.
                             </Typography>
-                            <Typography component="p" variant="caption" color="textSecondary" className="no_credit_card">No credit card required  • Unsubscribe at any time</Typography>
+                            <Typography component="p" variant="caption" color="textSecondary" className="no_credit_card">
+                                No credit card required  • Unsubscribe at any time</Typography>
                         </div>
 
                         <form>
@@ -77,13 +79,17 @@ class SignupPage extends Component {
                             <FormControlLabel
                                 className="terms"
                                 control={<Checkbox value="remember" color="primary" checked />}
-                                label={<Typography component="p" variant="body2" color="textSecondary">I agree to the terms of use</Typography>}
+                                label={<Typography component="p" variant="body2" color="textSecondary">
+                                    I agree to the terms of use
+                                </Typography>}
                             />
                         </form>
 
                     </main>
                     <footer className="container">
-                        <Typography component="p" variant="caption" color="textSecondary"><LockIcon fontSize="inherit" /> Your data is safe with us</Typography>
+                        <Typography component="p" variant="caption" color="textSecondary">
+                            <LockIcon fontSize="inherit" /> Your data is safe with us
+                        </Typography>
                     </footer>
                 </div>
             </Container>
