@@ -16,8 +16,7 @@ $drawerClosedWidth : 60px;
         flex-wrap: nowrap;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 18px;
-        padding-left: 24px;
+        padding: 12px 12px 12px 24px;
 
         .input {
             flex-grow: 2;
@@ -26,7 +25,7 @@ $drawerClosedWidth : 60px;
     }
 
     .extras {
-        padding: 12px;
+        //padding: 12px;
         height: 44px;
         display: flex;
         flex-direction: row;
@@ -44,11 +43,11 @@ $drawerClosedWidth : 60px;
         }
 
         .counter {
-            width: 155px;
+            width: 160px;
             display: flex;
             align-content: center;
             justify-content: space-around;
-            padding-left: 12px;
+            padding: 0 12px;
             align-items: center;
         }
     }
