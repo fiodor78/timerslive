@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Router, Switch, Route} from 'react-router-dom';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import HomePage from './pages/HomePage'
 import { PrivateRouter } from './router/PrivateRouter';
 import { history } from '../helpers/History';
 
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import DashboardPage from './pages/DashboardPage';
+
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
 import amber from '@material-ui/core/colors/amber';
-
 
 const theme = createMuiTheme({
     palette: {
@@ -42,11 +42,10 @@ class MainContainer extends Component {
             <MuiThemeProvider theme={theme}>
                 <Router history={history}>
                     <Switch>
-                        <PrivateRouter exact path="/" component={HomePage} />
+                        <PrivateRouter exact path="/dashboard" component={DashboardPage} />
                         <Route path="/login" component={LoginPage}/>
                         <Route path="/signup" component={SignupPage}/>
-                        {//<Route path="*" component={WelcomePage}/>
-                        }
+                        <Route path="*" component={DashboardPage}/>
                     </Switch>
                 </Router>
 
